@@ -1,0 +1,32 @@
+<div>
+
+    <div>
+        {{!-- post --}}
+        <h2>{{post.title}}</h2>
+        <p>{{post.text}}</p>
+        <p>{{post.user.username}} </p>
+    </div>
+{{!-- comments --}}
+    <div class="comments">
+        <p>Comments</p>
+        {{#each post.comments as |comment|}}
+        <p>{{comment.text}}</p>
+        <p>{{comment.user.username}}</p>
+        {{/each}}
+    </div>
+{{!-- add a comment --}}
+    <div>
+        <form class="form comment-form">
+            <div class="form-group">
+                <label for="comment-text">Add a comment:</label>
+                <input class="form-input" type="text" id="comment-text" data-post={{post.id}}/>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">submit</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="./js/comment.js"></script>

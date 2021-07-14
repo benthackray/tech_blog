@@ -1,34 +1,90 @@
 const router = require('express').Router();
-const { User } = require('../models');
-const withAuth = require('../utils/auth');
+const { Post, User, Comment } = require('../models');
+// const withAuth = require('../utils/auth');
 
-// TODO: Add a comment describing the functionality of the withAuth middleware
-router.get('/', withAuth, async (req, res) => {
+// GET all posts for homepage
+router.get('/', async (req, res) => {
   try {
-    const userData = await User.findAll({
-      attributes: { exclude: ['password'] },
-      order: [['name', 'ASC']],
+    const dbPostData = await Post.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
     });
 
-    const users = userData.map((project) => project.get({ plain: true }));
-
+    const posts = dbPostData.map((post) =>
+      post.get({ plain: true })
+    );
     res.render('homepage', {
-      users,
-      // TODO: Add a comment describing the functionality of this property
-      logged_in: req.session.logged_in,
+      posts,
+      loggedIn: req.session.loggedIn,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+// GET one post
+router.get('/post/:id', async (req, res) => {
+  try {
+    const dbPostData = await Post.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: [
+            'username'
+          ],
+        },
+        {
+          model: Comment,
+          attributes: [
+            'text'
+          ],
+        },
+      ],
+    });
+
+    const post = dbPostData.get({ plain: true });
+    res.render('post', { 
+      post, 
+      loggedIn: req.session.loggedIn });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+// GET one user posts
+router.get('/dashboard', async (req, res) => {
+  try {
+    // Find the logged in user based on the session ID
+    const userData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: Post }],
+    });
+
+    console.log(userData);
+
+    const user = userData.get({ plain: true });
+    console.log(user);
+    res.render('dashboard', {
+      user,
+      logged_in: true
     });
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
+// Login route
 router.get('/login', (req, res) => {
-  // TODO: Add a comment describing the functionality of this if statement
-  if (req.session.logged_in) {
+  if (req.session.loggedIn) {
     res.redirect('/');
     return;
   }
-
   res.render('login');
 });
 
