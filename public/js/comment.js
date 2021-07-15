@@ -1,7 +1,7 @@
 const commentFormHandler = async (event) => {
     event.preventDefault();
-    const text = await document.querySelector('#comment-text').value.trim();
-    const post_id = text.dataset.post;
+    const text = document.querySelector('#comment-text').value.trim();
+    const post_id = document.querySelector('#comment-text').dataset.post;
     if (text && post_id) {
         const response = await fetch('/api/comments/', {
             method: 'POST',
@@ -10,7 +10,7 @@ const commentFormHandler = async (event) => {
         });
 
         if (response.ok) {
-            document.location.replace('/post');
+            document.location.reload();
         } else {
             alert('Failed to submit post');
         }

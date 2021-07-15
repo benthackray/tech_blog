@@ -108,11 +108,12 @@ img {
 /* CARDS */
 .card {
   margin: 20px;
-  flex: 0 1 300px;
+  flex: 0 1 70%;
   border: 7px double var(--dark);
   border-radius: 10px;
   background-color: var(--light);
   color: var(--dark);
+  padding: 10px;
 }
 
 .login-card {

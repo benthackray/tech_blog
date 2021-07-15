@@ -1,21 +1,23 @@
 <div>
 
-    <div>
-        {{!-- post --}}
+{{!-- post --}}
+    <div class="card">
         <h2>{{post.title}}</h2>
+        <h4>By {{post.user.username}}</h4>
+        <h4>{{format_date post.createdAt}}</h4>
         <p>{{post.text}}</p>
-        <p>{{post.user.username}} </p>
     </div>
 {{!-- comments --}}
-    <div class="comments">
-        <p>Comments</p>
+    <div class="comments card">
+        <h4>Comments</h4>
         {{#each post.comments as |comment|}}
         <p>{{comment.text}}</p>
         <p>{{comment.user.username}}</p>
         {{/each}}
     </div>
 {{!-- add a comment --}}
-    <div>
+        {{#if loggedIn}}
+    <div class="card">
         <form class="form comment-form">
             <div class="form-group">
                 <label for="comment-text">Add a comment:</label>
@@ -26,6 +28,9 @@
             </div>
         </form>
     </div>
+        {{else}}
+        <a href="/login">Login to leave a comment</a>
+        {{/if}}
 
 </div>
 

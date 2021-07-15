@@ -40,15 +40,35 @@ router.get('/post/:id', async (req, res) => {
         },
         {
           model: Comment,
-          attributes: [
-            'text'
-          ],
+          include: [
+            {
+              model: User,
+              attributes: [
+                'username'
+              ],
+            },
+          ]
         },
       ],
     });
 
     const post = dbPostData.get({ plain: true });
     res.render('post', { 
+      post, 
+      loggedIn: req.session.loggedIn });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+// GET post for edit
+router.get('/edit/:id', async (req, res) => {
+  try {
+    const dbPostData = await Post.findByPk(req.params.id);
+
+    const post = dbPostData.get({ plain: true });
+    res.render('edit', { 
       post, 
       loggedIn: req.session.loggedIn });
   } catch (err) {
@@ -65,8 +85,6 @@ router.get('/dashboard', async (req, res) => {
       attributes: { exclude: ['password'] },
       include: [{ model: Post }],
     });
-
-    console.log(userData);
 
     const user = userData.get({ plain: true });
     console.log(user);

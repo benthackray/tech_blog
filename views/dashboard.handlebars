@@ -1,10 +1,15 @@
 <div>
+    {{!-- {{#if loggedIn}} --}}
+
     <h1>{{user.username}}'s Posts</h1>
 
     <div class="posts">
         {{#each user.posts as |post|}}
-        <p>{{post.title}}</p>
-        <p>{{post.text}}</p>
+        <div class="card">
+            <h3>{{post.title}}</h3>
+            <p>{{post.text}}</p>
+            <a href="/edit/{{post.id}}">Edit/Delete</a>
+        </div>
         {{/each}}
     </div>
 
@@ -23,6 +28,11 @@
             </div>
         </form>
     </div>
+
+    {{!-- {{else}}
+    <a href="/login">Login to see your Dashboard</a>
+    {{/if}} --}}
+
 
 </div>
 
